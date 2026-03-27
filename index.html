@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sérin's Red String Universe Final</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+
+        /* ✦ SCROLLBAR ✦ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #8C343C; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(#F64242, #FF8FAB); border-radius: 10px; }
+
+        body {
+            background-color: #6B1E26;
+            background-image:
+                radial-gradient(#F64242 1px, transparent 1px),
+                radial-gradient(rgba(255,143,171,0.2) 1px, transparent 1px);
+            background-size: 30px 30px, 15px 15px;
+            background-position: 0 0, 15px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 15px;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+            min-height: 100vh;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23F64242'/%3E%3C/svg%3E") 10 10, auto;
+        }
+
+        /* ✦ VIGNETTE ✦ */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(50,0,10,0.55) 100%);
+            pointer-events: none; z-index: 1;
+        }
+
+        /* ✦ STARS ✦ */
+        .star {
+            position: fixed; background: white; border-radius: 50%;
+            opacity: 0; z-index: 200;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 0.9; transform: scale(1.3); }
+        }
+
+        /* ✦ PARTICLES ✦ */
+        .particle {
+            position: fixed; top: -100px; z-index: 150;
+            pointer-events: none; width: 50px; height: auto;
+            animation: floatDown var(--speed) linear infinite;
+            filter: drop-shadow(0 0 6px rgba(246,66,66,0.5));
+        }
+        @keyframes floatDown {
+            0% { top: -10%; transform: rotate(0deg) translateX(0px); opacity: 0; }
+            10% { opacity: 0.75; }
+            90% { opacity: 0.75; }
+            100% { top: 110%; transform: rotate(360deg) translateX(100px); opacity: 0; }
+        }
+
+        /* ✦ GLITTER TRAIL ✦ */
+        .glitter {
+            position: fixed; pointer-events: none; z-index: 9998;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: glitterFade 0.8s ease forwards;
+        }
+        @keyframes glitterFade {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.2) translateY(-20px); }
+        }
+
+        /* ✦ MAIN CARD ✦ */
+        .main-card {
+            background-image: url('https://files.catbox.moe/b91u67.png');
+            background-color: #C8848B;
+            background-position: center top;
+            background-repeat: repeat-y;
+            background-size: 100% auto;
+            width: 100%; max-width: 500px;
+            border: 3px solid #F64242;
+            outline: 4px double #FF8FAB;
+            outline-offset: 4px;
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow:
+                0 0 0 8px rgba(246,66,66,0.08),
+                0 0 40px rgba(0,0,0,0.6),
+                0 0 80px rgba(246,66,66,0.15),
+                inset 0 0 40px rgba(140,52,60,0.1);
+            position: relative; z-index: 10;
+            animation: cardEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both, cardBreath 6s ease-in-out 0.8s infinite;
+        }
+        @keyframes cardEntrance {
+            0% { opacity: 0; transform: scale(0.9) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes cardBreath {
+            0%, 100% { box-shadow: 0 0 0 8px rgba(246,66,66,0.08), 0 0 40px rgba(0,0,0,0.6), 0 0 80px rgba(246,66,66,0.15), inset 0 0 40px rgba(140,52,60,0.1); }
+            50% { box-shadow: 0 0 0 8px rgba(246,66,66,0.15), 0 0 40px rgba(0,0,0,0.6), 0 0 120px rgba(246,66,66,0.3), inset 0 0 40px rgba(140,52,60,0.1); }
+        }
+
+        /* ✦ CORNER SPARKLES ✦ */
+        .main-card::before, .main-card::after {
+            content: '✦';
+            position: absolute; font-size: 1.2rem;
+            color: #F64242; opacity: 0.6;
+            animation: cornerSpin 8s linear infinite;
+        }
+        .main-card::before { top: 14px; left: 20px; }
+        .main-card::after { bottom: 14px; right: 20px; animation-direction: reverse; }
+        @keyframes cornerSpin {
+            0% { transform: rotate(0deg); opacity: 0.4; }
+            50% { opacity: 0.9; }
+            100% { transform: rotate(360deg); opacity: 0.4; }
+        }
+
+        /* ✦ BUNNIES ✦ */
+        .banner-bunny {
+            position: absolute; width: 70px; height: auto;
+            pointer-events: none; z-index: 155;
+            filter: drop-shadow(0 4px 8px rgba(246,66,66,0.3));
+        }
+        .bunny-left { top: 40px; left: -18px; animation: bunnyDriftLeft 3.5s ease-in-out infinite alternate; }
+        .bunny-right { top: 170px; right: -18px; animation: bunnyDriftRight 4.2s ease-in-out infinite alternate; }
+        @keyframes bunnyDriftLeft {
+            0% { transform: translateY(0px) rotate(-5deg); }
+            100% { transform: translateY(-15px) rotate(5deg); }
+        }
+        @keyframes bunnyDriftRight {
+            0% { transform: translateY(0px) rotate(5deg); }
+            100% { transform: translateY(15px) rotate(-5deg); }
+        }
+
+        /* ✦ BANNER ✦ */
+        .pfp-landscape {
+            width: 100%; aspect-ratio: 16 / 9;
+            margin-bottom: 20px;
+            position: relative; overflow: visible;
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.4));
+        }
+        .banner-gif {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover; border-radius: 6px; z-index: 1;
+        }
+        .banner-frame {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: fill; z-index: 2; pointer-events: none;
+        }
+
+        /* ✦ MUSIC PLAYER ✦ */
+        .music-player {
+            width: 88%; margin: 0 auto 22px auto;
+            background: linear-gradient(135deg, rgba(100,20,30,0.55), rgba(180,60,70,0.3));
+            border: 1px solid rgba(246,66,66,0.5);
+            border-radius: 18px;
+            padding: 14px 16px;
+            text-align: center; color: white;
+            box-shadow: 0 4px 20px rgba(246,66,66,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .music-title {
+            font-size: 0.82rem; margin-bottom: 9px;
+            font-weight: bold; letter-spacing: 2px;
+            color: #FFD6D6;
+            text-shadow: 0 0 10px rgba(246,66,66,0.5);
+        }
+        .music-note { display: inline-block; animation: noteBounce 1s ease-in-out infinite alternate; }
+        @keyframes noteBounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-3px); }
+        }
+        audio { width: 100%; height: 32px; filter: sepia(20%) saturate(70%) hue-rotate(300deg); }
+
+        /* ✦ QUOTE ✦ */
+        .fancy-quote {
+            text-align: center; color: #FFFFFF;
+            font-weight: 700; font-size: 1rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            line-height: 1.6; margin-bottom: 30px;
+            text-shadow: 1px 1px 6px rgba(140,52,60,0.8);
+            padding: 14px 22px;
+            border-left: 2px solid rgba(246,66,66,0.45);
+            border-right: 2px solid rgba(246,66,66,0.45);
+            position: relative;
+        }
+        .fancy-quote::before {
+            content: '❝'; position: absolute;
+            top: -8px; left: 10px;
+            font-size: 2rem; color: rgba(246,66,66,0.4);
+            font-family: Georgia, serif; line-height: 1;
+        }
+        .fancy-quote::after {
+            content: '❞'; position: absolute;
+            bottom: -20px; right: 10px;
+            font-size: 2rem; color: rgba(246,66,66,0.4);
+            font-family: Georgia, serif; line-height: 1;
+        }
+
+        /* ✦ SECTION TITLES ✦ */
+        h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            color: #FFFFFF;
+            text-shadow: 0 0 20px rgba(246,66,66,0.6), 2px 2px 4px #5C1520;
+            margin-top: 38px; margin-bottom: 12px;
+            letter-spacing: 3px;
+        }
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px; height: 1px;
+            background: linear-gradient(90deg, transparent, #F64242, transparent);
+            margin: 6px auto 0;
+        }
+
+        /* ✦ SPARKLE DIVIDER ✦ */
+        .sparkle-divider {
+            text-align: center;
+            color: rgba(246,66,66,0.5);
+            font-size: 0.8rem;
+            letter-spacing: 8px;
+            margin: 5px 0;
+            animation: dividerGlow 3s ease-in-out infinite;
+        }
+        @keyframes dividerGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.9; color: #F64242; }
+        }
+
+        /* ✦ SECTIONS ✦ */
+        .section {
+            margin-bottom: 25px; padding: 20px;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #FFB8B6, #FFCCCB);
+            display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: box-shadow 0.4s ease, transform 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .section:hover {
+            box-shadow: 0 8px 30px rgba(246,66,66,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
+
+        .text-content { line-height: 1.9; font-size: 0.92rem; }
+        .highlight-red { color: #7A1E28; font-weight: bold; }
+        .highlight-pink { color: #C03040; font-style: italic; }
+
+        /* ✦ TAKEN SECTION ✦ */
+        .taken-section {
+            background: linear-gradient(145deg, #D8EEF7, #E8F5FA) !important;
+            border: 1px solid rgba(106,154,176,0.3) !important;
+        }
+        .taken-section:hover {
+            box-shadow: 0 8px 30px rgba(106,154,176,0.35) !important;
+        }
+
+        /* ✦ DNI SECTION ✦ */
+        .dni-section {
+            background: linear-gradient(145deg, rgba(140,52,60,0.18), rgba(180,60,60,0.1)) !important;
+            border: 2px dashed rgba(246,66,66,0.5) !important;
+        }
+
+        /* ✦ RED STRING ✦ */
+        .fate-thread {
+            width: 2px; height: 65px;
+            background: linear-gradient(to bottom, #F64242, #FF8FAB, #F64242);
+            margin: -32px auto -28px auto;
+            box-shadow: 0 0 12px #F64242, 0 0 25px rgba(246,66,66,0.4);
+            position: relative; z-index: 999 !important;
+            animation: threadPulse 2.5s infinite ease-in-out;
+            border-radius: 2px;
+        }
+        .fate-thread::before, .fate-thread::after {
+            content: '♡';
+            position: absolute;
+            left: 50%; transform: translateX(-50%);
+            font-size: 0.7rem; color: #F64242;
+            animation: heartBeat 2.5s infinite ease-in-out;
+            text-shadow: 0 0 8px #F64242;
+        }
+        .fate-thread::before { top: -14px; }
+        .fate-thread::after { bottom: -14px; }
+        @keyframes threadPulse {
+            0%, 100% { opacity: 0.6; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.08); }
+        }
+        @keyframes heartBeat {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+            50% { transform: translateX(-50%) scale(1.3); opacity: 1; }
+        }
+
+        /* ✦ IMAGE BOXES ✦ */
+        .box-img {
+            width: 120px !important; height: auto !important;
+            background: transparent !important;
+            border: none !important; border-radius: 0 !important;
+            overflow: visible !important;
+            flex-shrink: 0;
+            display: flex; justify-content: center; align-items: center;
+            animation: heartFloat 3s ease-in-out infinite alternate;
+        }
+        @keyframes heartFloat {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-10px); }
+        }
+        .box-img img {
+            width: 100% !important; height: auto !important;
+            object-fit: contain !important;
+            filter: drop-shadow(0 0 14px rgba(246,66,66,0.35));
+        }
+
+        /* ✦ FOOTER ✦ */
+        .lwj-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            color: #fff;
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+        .lwj-footer::before {
+            content: '';
+            display: block;
+            width: 100%; height: 1px;
+            background: linear-gradient(90deg, transparent, #F64242, #FF8FAB, #F64242, transparent);
+            margin-bottom: 18px;
+        }
+        .lwj-quote {
+            font-size: 1.1rem; font-style: italic;
+            text-shadow: 1px 1px 3px rgba(140,52,60,0.8);
+            margin-bottom: 8px;
+            display: inline-block;
+            transition: color 0.4s ease, text-shadow 0.4s ease;
+            cursor: default;
+        }
+        .lwj-quote:hover {
+            color: #F64242;
+            text-shadow: 0 0 15px rgba(246,66,66,0.6);
+        }
+        .lwj-quote:hover::after {
+            content: " — I am here.";
+            font-size: 0.8rem; opacity: 0.8;
+        }
+        .lwj-attr { font-size: 0.72rem; opacity: 0.65; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <script>
+        // ✦ STARS
+        for (let i = 0; i < 50; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            let size = (Math.random() * 3 + 1) + 'px';
+            star.style.width = size; star.style.height = size;
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.setProperty('--duration', (Math.random() * 4 + 2) + 's');
+            star.style.animationDelay = (Math.random() * 4) + 's';
+            document.body.appendChild(star);
+        }
+
+        // ✦ GLITTER CURSOR TRAIL
+        const colors = ['#F64242', '#FF8FAB', '#FFB2B0', '#FFCCCB', '#ffffff'];
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.6) {
+                const g = document.createElement('div');
+                g.className = 'glitter';
+                const s = (Math.random() * 5 + 3) + 'px';
+                g.style.width = s; g.style.height = s;
+                g.style.left = e.clientX + 'px';
+                g.style.top = e.clientY + 'px';
+                g.style.background = colors[Math.floor(Math.random() * colors.length)];
+                document.body.appendChild(g);
+                setTimeout(() => g.remove(), 800);
+            }
+        });
+    </script>
+
+    <img src="https://files.catbox.moe/osobf9.png" class="particle" style="left: 12%; --speed: 12s;">
+    <img src="https://files.catbox.moe/tl0rs9.png" class="particle" style="left: 45%; --speed: 18s; animation-delay: -4s;">
+    <img src="https://files.catbox.moe/35r8yb.png" class="particle" style="left: 78%; --speed: 15s; animation-delay: -8s;">
+    <img src="https://files.catbox.moe/osobf9.png" class="particle" style="left: 28%; --speed: 20s; animation-delay: -10s; opacity: 0.5;">
+
+    <div class="main-card">
+        <img src="https://files.catbox.moe/osio19.png" class="banner-bunny bunny-left">
+        <img src="https://files.catbox.moe/osio19.png" class="banner-bunny bunny-right">
+
+        <div class="pfp-landscape">
+            <img src="https://files.catbox.moe/5gxlfm.gif" class="banner-gif">
+            <img src="https://files.catbox.moe/qykw21.png" class="banner-frame">
+        </div>
+
+        <div class="music-player">
+            <div class="music-title"><span class="music-note">🎶</span> Mourning for love — 5:06</div>
+            <audio controls loop>
+                <source src="https://files.catbox.moe/uuevok.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <div class="fancy-quote">
+            "You're really great. I like you... Or in other words, I fancy you, I love you, I want you, I can't leave you, I whatever you."
+        </div>
+
+        <div class="sparkle-divider">✦ · · · ✦ · · · ✦</div>
+
+        <h2>⊹ About Me ⊹</h2>
+        <div class="section">
+            <div class="section-content" style="text-align: center;">
+                <div class="box-img" style="width: 250px !important; margin: 0 auto 15px auto;">
+                    <img src="https://files.catbox.moe/zo8h46.png">
+                </div>
+                <div class="text-content">
+                    <span class="highlight-red">Name:</span> Ardén Pudding / Sérin Sugarplum <br>
+                    <span class="highlight-red">Age:</span> Soon 17 (24/06) <br>
+                    <span class="highlight-pink">ADHD / INFP / Introvert</span>
+                    <br><br>
+                    Pansexual • Taken • <span class="highlight-pink">Social anxiety is my bsf</span> <br>
+                    Wei Wuxian and ferret golden core ⊹
+                </div>
+            </div>
+        </div>
+
+        <div class="fate-thread"></div>
+
+        <h2>⊹ Taken ⊹</h2>
+        <div class="section taken-section" style="text-align:center;">
+            <div class="box-img" style="width:180px !important; margin: 0 auto 10px auto;">
+                <img src="https://files.catbox.moe/zvsohs.png">
+            </div>
+            <div class="text-content" style="color: #5A8AA0;">
+                <span style="color: #3A6A80; font-weight: bold;">Taken by:</span> My shark, My moon, My love, My hanguang jun, Lan er gege ♡♡♡ <br><br>
+                I love him so so so much, my calm to my chaos! mwa mwa mwa! <br>
+                <span style="color: #7AACC0; font-style: italic; font-family: 'Playfair Display', serif;">Anniversary: May 7 ♡</span>
+            </div>
+        </div>
+
+        <div class="sparkle-divider">✦ · · · ✦ · · · ✦</div>
+
+        <h2>⊹ Extra ⊹</h2>
+        <div class="section">
+            <div class="text-content">
+                Before talking to me, I can be quite too energetic for you! If I'm comfortable, expect <span class="highlight-red">ALL CAPS LOCK</span>. I'm a sensitive ferret (physically/mentally), but I'll be polite! <br><br>
+                Just don't cross the boundaries or I won't think twice about the <span class="highlight-red">BLOCK button</span>.
+            </div>
+        </div>
+
+        <h2>⊹ Interests ⊹</h2>
+        <div class="section">
+            <div class="text-content">
+                <span class="highlight-red">LIKES:</span> Fluffy things, Purple, Red Velvet Pudding, Boba, Drawing, Singing, Quiet places. <br><br>
+                <span class="highlight-pink">DISLIKES:</span> Spicy (low tolerance!), Sunlight, P.E/Exercise, Responsibility, Crowds, Immature people.
+            </div>
+        </div>
+
+        <h2>⊹ Fandoms ⊹</h2>
+        <div class="section">
+            <div class="text-content" style="font-size: 0.85rem;">
+                WuWa, TGCF, MDZS, TADC, Love & Deepspace, Homicipher, Cookie Run, Sky:COTL, Murder Drones, Helluva Boss, Alien Stage, Infinity Nikki, HSR, Twisted Wonderland... <span class="highlight-pink">& more!</span>
+            </div>
+        </div>
+
+        <h2>⊹ DNI ⊹</h2>
+        <div class="section dni-section">
+            <div class="text-content" style="text-align:center;">
+                Basic DNI • Pedos • Problematic People • Homophobes <br><br>
+                <span class="highlight-red"><b>STAY AWAY!</b></span>
+            </div>
+        </div>
+
+        <div class="lwj-footer">
+            <div class="lwj-quote">"Wei Ying."</div>
+            <div class="lwj-attr">— Lan Wangji, probably every five minutes</div>
+        </div>
+    </div>
+
+</body>
+</html>
